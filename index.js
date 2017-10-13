@@ -11,6 +11,6 @@ let searchArg = process.argv[3]
 
 switch(permissions) {
 	case 'customer':
-		customer();
+		customer.displayAllProducts();
 		break;
 }

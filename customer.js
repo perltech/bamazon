@@ -10,14 +10,6 @@ let connection = mysql.createConnection({
     database : 'bamazon'
 });
 
-inquirer
-.prompt([
-    
-])
-.then(function(user) {
-
-});
-
 function displayAllProducts() {
 	connection.query('SELECT * FROM products', function(error, results, fields) {
 		if (error) throw error;
@@ -25,10 +17,31 @@ function displayAllProducts() {
 	});
 }
 
+function itemSelection() {
+    displayAllProducts();
+    inquirer
+    .prompt([
+        {
+            type: 'input',
+            name: 'item_id',
+            message: "What is the id of the item you'd like to purchase?"
+        },
+        {
+            type: 'input',
+            name: 'quantity',
+            message: 'How many would you like?'
+        }
+    ])
+    .then(function(user) {
+        connection.query('SELECT * FROM products WHERE item_id =?', [user.item_id], function(error, results, fields) {
+            if (error) throw error;
+              console.log(results);
+        })
+        connection.end();
+    });
+}
+
 connection.connect(function(err){
 	if (err) throw err;
-    //runEverything();
-    displayAllProducts();
-	connection.end();
-})
-
+    itemSelection();
+});
