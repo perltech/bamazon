@@ -1,3 +1,4 @@
+// Need to export the module, but how?
 let mysql = require('mysql');
 let inquirer = require('inquirer');
 
@@ -18,6 +19,7 @@ function displayAllProducts() {
 }
 
 function itemSelection() {
+    //Correct connections so that it doesn't dial in at the wrong time and display the data so ugly
     displayAllProducts();
     inquirer
     .prompt([
@@ -34,9 +36,15 @@ function itemSelection() {
     ])
     .then(function(user) {
         connection.query('SELECT * FROM products WHERE item_id =?', [user.item_id], function(error, results, fields) {
-            if (error) throw error;
-              console.log(results);
-        })
+            if (error){
+                throw error;
+            } 
+			else if(results.stock_quantity === 0) {
+                console.log("Out of Stock!");
+            } else {
+                console.log(results);
+            }
+        });
         connection.end();
     });
 }
@@ -45,3 +53,4 @@ connection.connect(function(err){
 	if (err) throw err;
     itemSelection();
 });
+
