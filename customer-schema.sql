@@ -1,7 +1,7 @@
 -- Inevitable fault logic...smh:````(
-#DROP DATABASE IF EXISTS favorite_db;
+#DROP DATABASE IF EXISTS bamazon;
 
-#CREATE DATABASE favorite_db;
+#CREATE DATABASE bamazon;
 -- End
 
 #USE bamazon;
