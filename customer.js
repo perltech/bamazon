@@ -14,13 +14,22 @@ let connection = mysql.createConnection({
 function displayAllProducts() {
 	connection.query('SELECT * FROM products', function(error, results, fields) {
 		if (error) throw error;
-	  	console.log(results);
-	});
+        console.log(results);
+        itemSelection(results);  
+    });
+}
+
+function changeQuantity(quantity, product) {
+    connection.query( "UPDATE products SET stock_quantity = stock_quantity - ? WHERE item_id = ?", [quantity, product.item_id], function(err, res) {
+          console.log("\nYou bought " + quantity + " " + product.product_name + "s!");
+          displayAllProducts();
+          //connection.end();
+        }
+    );
 }
 
 function itemSelection() {
     //Correct connections so that it doesn't dial in at the wrong time and display the data so ugly
-    displayAllProducts();
     inquirer
     .prompt([
         {
@@ -42,15 +51,16 @@ function itemSelection() {
 			else if(results.stock_quantity === 0) {
                 console.log("Out of Stock!");
             } else {
+                changeQuantity(user.quantity, user);
                 console.log(results);
+                connection.end();
             }
         });
-        connection.end();
     });
 }
 
 connection.connect(function(err){
 	if (err) throw err;
-    itemSelection();
+    displayAllProducts();
 });
 
