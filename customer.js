@@ -23,7 +23,7 @@ function changeQuantity(quantity, product) {
     connection.query( "UPDATE products SET stock_quantity = stock_quantity - ? WHERE item_id = ?", [quantity, product.item_id], function(err, res) {
           console.log("\nYou bought " + quantity + " " + product.product_name + "s!");
           displayAllProducts();
-          //connection.end();
+          connection.end();
         }
     );
 }
@@ -48,12 +48,11 @@ function itemSelection() {
             if (error){
                 throw error;
             } 
-			else if(results.stock_quantity === 0) {
+			else if(results.stock_quantity <= 0) {
                 console.log("Out of Stock!");
             } else {
                 changeQuantity(user.quantity, user);
                 console.log(results);
-                connection.end();
             }
         });
     });
